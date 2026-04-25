@@ -1,9 +1,10 @@
 const API_URL = "http://localhost:5678/api";
+let tousLesTravaux = [];
 
 async function getTravaux() {
   const response = await fetch(`${API_URL}/works`);
-  const travaux = await response.json();
-  afficherTravaux(travaux);
+  tousLesTravaux = await response.json();
+  afficherTravaux(tousLesTravaux);
 }
 
 function afficherTravaux(travaux) {
@@ -45,6 +46,30 @@ function afficherFiltres(categories) {
     btn.textContent = categorie.name;
     btn.dataset.id = categorie.id;
     filters.appendChild(btn);
+  });
+
+  gererFiltres();
+}
+
+function gererFiltres() {
+  const boutons = document.querySelectorAll(".filters button");
+
+  boutons.forEach((bouton) => {
+    bouton.addEventListener("click", (event) => {
+      boutons.forEach((b) => b.classList.remove("active"));
+      event.target.classList.add("active");
+
+      const id = event.target.dataset.id;
+
+      if (!id) {
+        afficherTravaux(tousLesTravaux);
+      } else {
+        const travauxFiltres = tousLesTravaux.filter(
+          (t) => t.categoryId === Number(id)
+        );
+        afficherTravaux(travauxFiltres);
+      }
+    });
   });
 }
 
