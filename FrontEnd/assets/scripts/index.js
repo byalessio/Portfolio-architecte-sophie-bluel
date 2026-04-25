@@ -25,4 +25,28 @@ function afficherTravaux(travaux) {
   });
 }
 
+async function getCategories() {
+  const response = await fetch(`${API_URL}/categories`);
+  const categories = await response.json();
+  afficherFiltres(categories);
+}
+
+function afficherFiltres(categories) {
+  const filters = document.querySelector(".filters");
+  filters.innerHTML = "";
+
+  const btnTous = document.createElement("button");
+  btnTous.textContent = "Tous";
+  btnTous.classList.add("active");
+  filters.appendChild(btnTous);
+
+  categories.forEach((categorie) => {
+    const btn = document.createElement("button");
+    btn.textContent = categorie.name;
+    btn.dataset.id = categorie.id;
+    filters.appendChild(btn);
+  });
+}
+
 getTravaux();
+getCategories();
