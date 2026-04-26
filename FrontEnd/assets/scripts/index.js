@@ -1,4 +1,6 @@
 const API_URL = "http://localhost:5678/api";
+const token = localStorage.getItem("token");
+const isLoggedIn = Boolean(token);
 let tousLesTravaux = [];
 
 async function getTravaux() {
@@ -73,5 +75,25 @@ function gererFiltres() {
   });
 }
 
+function gererModeConnexion() {
+  if (!isLoggedIn) return;
+
+  // Changer login en logout
+  const loginLi = document.querySelector("nav li:nth-child(3)");
+  loginLi.innerHTML = `<a href="#">logout</a>`;
+  loginLi.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.reload();
+  });
+
+  // Cacher les filtres
+  document.querySelector(".filters").style.display = "none";
+  // Afficher la barre mode édition
+  document.querySelector("#edit-banner").style.display = "flex";
+  // Afficher le bouton modifier
+  document.querySelector("#modifier-btn").style.display = "block";
+}
+
 getTravaux();
 getCategories();
+gererModeConnexion();
